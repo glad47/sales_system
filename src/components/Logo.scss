@@ -1,0 +1,23 @@
+.logo-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: transparent; // optional, adjust as needed
+  z-index: 2;
+}
+
+.app-logo img {
+  height: 120px;
+  width: auto;
+}
+
+.badge {
+  font-family: 'LyonArabicDisplay', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #000;
+  white-space: nowrap;
+  
+}
