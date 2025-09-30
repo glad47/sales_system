@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
-  const isLocal = process.env.REACT_APP_API_DOMAIN == 'http://localhost:8888';
+  const isLocal = process.env.REACT_APP_API_DOMAIN == 'http://server:8888';
   app.use(
     '/service',
     createProxyMiddleware({

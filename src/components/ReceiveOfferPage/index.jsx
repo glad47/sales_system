@@ -31,7 +31,7 @@ export default function ReceiveOffersPage() {
     if (!token) return navigate('/');
     setLoading(true);
     try {
-      const res = await api.get('/service/search-offers', {
+      const res = await api.get('/service/search-offers-rec', {
         params: {
           page: params.page || pagination.current,
           pageSize: params.pageSize || pagination.pageSize,

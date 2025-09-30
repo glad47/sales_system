@@ -133,7 +133,7 @@ useEffect(() => {
     // Only connect if userType is valid
     if (!['1', '2', '3', 'root'].includes(userType?.toString())) return;
 
-    const socket = new WebSocket('ws://localhost:8888');
+    const socket = new WebSocket(process.env.REACT_APP_WS_DOMAIN);
 
     socket.onopen = () => {
       console.log('WebSocket connected');
@@ -144,6 +144,8 @@ useEffect(() => {
     socket.onmessage = (event) => {
       try {
         const res = JSON.parse(event.data);
+        console.log("**********")
+        console.log(res)
         if (!res || !res.type) return;
 
         if (res.type === 'bill' && (userType == '1' || userType == '3' || userType == 'root')) {
@@ -151,7 +153,7 @@ useEffect(() => {
           if (!seen.includes(res.bill_id)) {
             api.info({
               message: 'إشعار جديد',
-              description: `عرض سعر جديد من ${res.username} لشركة ${res.companyName}`,
+              description: `${res.companyName} شركة ${res.username} عرض سعر جديد من`,
               placement: 'topRight',
               duration: 10
             });
@@ -165,7 +167,7 @@ useEffect(() => {
           if (!seen.includes(res.offer_id)) {
             api.info({
               message: 'إشعار جديد',
-              description: `عرض سعر جديد من ${res.username}`,
+              description: `${res.username} عرض جديد من`,
               placement: 'topRight',
               duration: 10
             });

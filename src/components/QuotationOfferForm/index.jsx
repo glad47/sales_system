@@ -52,7 +52,7 @@ export default function QuotationOfferForm({ initialData = null, readOnly = fals
         paddedItems.push({
           description: '',
           quantity: 0,
-          salePrice: 0
+          salePrice: ''
         });
       }
 
@@ -69,9 +69,17 @@ export default function QuotationOfferForm({ initialData = null, readOnly = fals
 
       setDiscount(initialData.vendorDiscount);
     } else {
-      const initialRows = Array.from({ length: 10 }, (_, i) => ({ key: i }));
-      setDataSource(initialRows);
-      setCount(10);
+       const paddedItems = [];
+        while (paddedItems.length < 10) {
+          paddedItems.push({
+            description: '',
+            quantity: 0,
+            salePrice: '',
+          });
+        }
+        form.setFieldsValue({ items: paddedItems });
+        setDataSource(paddedItems.map((item, i) => ({key: uuid(), ...item })));
+        setCount(10);
     }
   }, [initialData]);
 
@@ -333,19 +341,67 @@ export default function QuotationOfferForm({ initialData = null, readOnly = fals
           label ={"بداية تاريخ العرض"}
         />
 
-        <Table
-          className="main-table"
-          dataSource={dataSource}
-          columns={columns}
-          pagination={false}
-          rowKey="key"
-          bordered
-          tableLayout="fixed"
-        />
+          <Form.List name="items">
+          {(fields, { add, remove }) => (
+            <>
+              <Table
+                className="main-table"
+                dataSource={fields}
+                columns={[
+                  {
+                    title: '#',
+                    width: '3.5%',
+                    render: (_, __, i) => i + 1
+                  },
+                  {
+                    title: 'البيان',
+                    width: '35%',
+                    render: (_, field) => (
+                      <Form.Item name={[field.name, 'description']} noStyle>
+                        <Input disabled={readOnlyState} />
+                      </Form.Item>
+                    )
+                  },
+                  {
+                    title: 'الكمية',
+                    render: (_, field) => (
+                      <Form.Item name={[field.name, 'quantity']} noStyle>
+                        <InputNumber
+                          min={0}
+                          step={0.01}
+                          style={{ width: '100%' }}
+                          disabled={readOnlyState}
+                        />
+                      </Form.Item>
+                    )
+                  },
+                  {
+                    title: 'سعر البيع',
+                    render: (_, field) => (
+                      <Form.Item name={[field.name, 'salePrice']} noStyle>
+                        <Input style={{ width: '100%' }} disabled={readOnlyState} />
+                      </Form.Item>
+                    )
+                  },
+                  !isGeneratingPDF && !readOnlyState && {
+                    title: '',
+                    width: '5%',
+                    render: (_, field, index) => (
+                      <Button
+                        icon={<DeleteOutlined />}
+                        danger
+                        onClick={() => remove(index)}
+                      />
+                    )
+                  }
+                ].filter(Boolean)}
+                pagination={false}
+                rowKey="key"
+                bordered
+                tableLayout="fixed"
+              />
 
-
-
-        <div className="note-section" style={{marginTop: 15}}>
+              <div className="note-section" style={{marginTop: 15}}>
          
             <label>ملاحظة:</label>
             <Input
@@ -357,62 +413,73 @@ export default function QuotationOfferForm({ initialData = null, readOnly = fals
        
           </div>
 
-          <table className="signatures-table">
-            <thead>
-              <tr>
-                <th>توقيع المشتريات</th>
+              <table className="signatures-table">
+                <thead>
+                  <tr>
+                    <th>توقيع المشتريات</th>
+                  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <Input key={"username"} onChange={(e) =>{
+                        if(!editState){
+                          setUsername(e.target.value)}
+                        }
+                      }  value={username} disabled={readOnlyState} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {
+                  (!isGeneratingPDF  && readOnlyState && <Form.Item style={{ marginTop: 24 }}>
+                    {    <Button  style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }}  type="primary" onClick={() => generatePDF(pdfRef)}>تحميل PDF</Button>}
+
+
+                    
+                  </Form.Item>)
+              }  
+
+              {!isGeneratingPDF && !readOnlyState && (
+                    <>
+                    <Button
+                      icon={<PlusOutlined />}
+                      onClick={() =>
+                        add({
+                          description: '',
+                          quantity: 0,
+                          salePrice: ''
+                        })
+                      }
+                      block
+                      style={{
+                        marginTop: 16,
+                        borderColor: '#76c4cc',
+                        color: '#76c4cc',
+                        backgroundColor: '#f0fbfc',
+                        fontWeight: 'bold',
+                        borderRadius: 6
+                      }}
+                    >
+                      إضافة بند
+                    </Button>
               
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <Input key={"username"} onChange={(e) =>{
-                    if(!editState){
-                      setUsername(e.target.value)}
-                    }
-                  }  value={username} disabled={readOnlyState} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        {
-            (!isGeneratingPDF  && readOnlyState && <Form.Item style={{ marginTop: 24 }}>
-              {    <Button  type="primary" onClick={() => generatePDF(pdfRef)}>تحميل PDF</Button>}
-
-
               
-            </Form.Item>)
-        }  
+                           
+                    <Form.Item style={{ marginTop: 24 }}>
+                      <Button style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary" onClick={editState ? handleUpdate : handleSubmission}>
+                        {editState ? 'حفظ' : 'ارسال'}
+                      </Button>
+                    </Form.Item>
+                          </>
+                          )}
+                        </>
+                      )}
 
-        {!isGeneratingPDF && !readOnlyState && (
-          <>
-            <Button
-              icon={<PlusOutlined />}
-              onClick={() => {
-                setDataSource([...dataSource, { key: count }]);
-                setCount(count + 1);
-              }}
-              block
-              style={{
-                marginTop: 16,
-                borderColor: '#76c4cc',
-                color: '#76c4cc',
-                backgroundColor: '#f0fbfc',
-                fontWeight: 'bold',
-                borderRadius: 6
-              }}
-            >
-              إضافة بند
-            </Button>
-
-            <Form.Item style={{ marginTop: 24 }}>
-              <Button style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary" onClick={editState ? handleUpdate : handleSubmission}>
-                {editState ? 'حفظ' : 'ارسال'}
-              </Button>
-            </Form.Item>
-          </>
-        )}
+             
+        </Form.List>
       </Form>
     </div>
     </div>

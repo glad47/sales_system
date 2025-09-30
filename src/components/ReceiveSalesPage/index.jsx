@@ -31,7 +31,7 @@ export default function ReceiveSalesPage() {
     if (!token) return navigate('/');
     setLoading(true);
     try {
-      const res = await api.get('/service/search-quotations', {
+      const res = await api.get('/service/search-quotations-rec', {
         params: {
           page: params.page || pagination.current,
           pageSize: params.pageSize || pagination.pageSize,

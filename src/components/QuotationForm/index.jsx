@@ -81,8 +81,20 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
       setTax(initialData.tax);
       setTotal(initialData.total);
     } else {
-      const initialRows = Array.from({ length: 10 }, (_, i) => ({ key: i }));
-      setDataSource(initialRows);
+      const paddedItems = [];
+      while (paddedItems.length < 10) {
+        paddedItems.push({
+          description: '',
+          intensity: '',
+          cost: 0,
+          quantity: 0,
+          salePrice: 0,
+          location: '',
+          totalCost: 0
+        });
+      }
+      form.setFieldsValue({ items: paddedItems });
+      setDataSource(paddedItems.map((item, i) => ({key: uuid(), ...item })));
       setCount(10);
     }
   }, [initialData]);
@@ -184,7 +196,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     }
 
     if (!vendorname || vendorname.trim() === '') {
-      message.error('يرجى إدخال توقيع المورد');
+      message.error('يرجى إدخال توقيع المندوب');
       return;
     }
 
@@ -245,7 +257,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     }
 
     if (!vendorname || vendorname.trim() === '') {
-      message.error('يرجى إدخال توقيع المورد');
+      message.error('يرجى إدخال توقيع المندوب');
       return;
     }
 
@@ -325,107 +337,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     setIsGeneratingPDF(false);
 };
 
-  const columns = [
-    { title: '#', width: '3.5%', dataIndex: 'index', render: (_, __, i) => i + 1 },
-    {
-      title: 'البيان',
-      dataIndex: 'description',
-      width: '35%',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'description']} noStyle>
-          <Input disabled={readOnlyState} />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'الشدة',
-      dataIndex: 'intensity',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'intensity']} noStyle>
-          <Input disabled={readOnlyState} />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'التكلفة',
-      dataIndex: 'cost',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'cost']} noStyle>
-          <InputNumber
-            min={0}
-            step={0.01}
-            style={{ width: '100%' }}
-            onChange={handleRecalculate}
-            disabled={readOnlyState}
-          />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'الكمية',
-      dataIndex: 'quantity',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'quantity']} noStyle>
-          <InputNumber
-            min={0}
-            step={0.01}
-            style={{ width: '100%' }}
-            onChange={handleRecalculate}
-            disabled={readOnlyState}
-          />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'الإجمالي',
-      dataIndex: 'totalCost',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'totalCost']} noStyle>
-          <InputNumber
-            style={{ width: '100%' }}
-            formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={value => value.replace(/,/g, '')}
-            disabled
-          />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'سعر البيع',
-      dataIndex: 'salePrice',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'salePrice']} noStyle>
-          <InputNumber min={0} step={0.01} style={{ width: '100%' }} disabled={readOnlyState} />
-        </Form.Item>
-      )
-    },
-    {
-      title: 'مكان العرض',
-      dataIndex: 'location',
-      render: (_, __, index) => (
-        <Form.Item name={['items', index, 'location']} noStyle>
-          <Input disabled={readOnlyState} />
-        </Form.Item>
-      )
-    },
-    !isGeneratingPDF && !readOnlyState && {
-      title: '',
-      dataIndex: 'actions',
-      width: '5%',
-      render: (_, __, index) => (
-                <Button
-          icon={<DeleteOutlined />}
-          danger
-          onClick={() => {
-            const newData = [...dataSource];
-            newData.splice(index, 1);
-            setDataSource(newData);
-          }}
-        />
-      )
-    }
-  ].filter(Boolean);
-
+ 
 
     return (
     <div ref={pdfRef} >
@@ -445,17 +357,109 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
           disabled={readOnlyState}
         />
 
-        <Table
-          className="main-table"
-          dataSource={[...dataSource]}
-          columns={columns}
-          pagination={false}
-          rowKey="key"
-          bordered
-          tableLayout="fixed"
-        />
 
-        <SummaryTable subtotal={subtotal} tax={tax} total={total} isGen={isGeneratingPDF} readOnlyState={readOnlyState} />
+         <Form.List name="items">
+        {(fields, { add, remove }) => (
+          <>
+            <Table
+              className="main-table"
+              dataSource={fields}
+              rowKey="key"
+              pagination={false}
+              bordered
+              columns={[
+                {
+                  title: '#',
+                  render: (_, __, i) => i + 1
+                },
+                {
+                  title: 'البيان',
+                  width: '35%',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'description']} noStyle>
+                      <Input disabled={readOnlyState} />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'الشدة',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'intensity']} noStyle>
+                      <Input disabled={readOnlyState} />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'التكلفة',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'cost']} noStyle>
+                      <InputNumber
+                        min={0}
+                        step={0.01}
+                        style={{ width: '100%' }}
+                        onChange={handleRecalculate}
+                        disabled={readOnlyState}
+                      />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'الكمية',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'quantity']} noStyle>
+                      <InputNumber
+                        min={0}
+                        step={0.01}
+                        style={{ width: '100%' }}
+                        onChange={handleRecalculate}
+                        disabled={readOnlyState}
+                      />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'الإجمالي',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'totalCost']} noStyle>
+                      <InputNumber
+                        style={{ width: '100%' }}
+                        formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value.replace(/,/g, '')}
+                        disabled
+                      />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'سعر البيع',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'salePrice']} noStyle>
+                      <InputNumber min={0} step={0.01} style={{ width: '100%' }} disabled={readOnlyState} />
+                    </Form.Item>
+                  )
+                },
+                {
+                  title: 'مكان العرض',
+                  render: (_, field) => (
+                    <Form.Item {...field} name={[field.name, 'location']} noStyle>
+                      <Input disabled={readOnlyState} />
+                    </Form.Item>
+                  )
+                },
+                !isGeneratingPDF && !readOnlyState && {
+                  title: '',
+                  render: (_, field, index) => (
+                    <Button
+                      icon={<DeleteOutlined />}
+                      danger
+                      onClick={() => remove(index)}
+                    />
+                  )
+                }
+              ].filter(Boolean)}
+            />
+
+             <SummaryTable subtotal={subtotal} tax={tax} total={total} isGen={isGeneratingPDF} readOnlyState={readOnlyState} />
 
 
         <div className="note-section">
@@ -470,17 +474,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
        
           </div>
 
-          {/* <div className="info-row">
-            <label>اسم المستخدم:</label>
-            <Input value={username} disabled className="info-input" />
-          </div>
-
-          <div className="info-row">
-            <label>اسم المورد:</label>
-            <Input value={companyName} disabled className="info-input" />
-          </div> */}
-
-          <table className="signatures-table">
+            <table className="signatures-table">
             <thead>
               <tr>
                 <th>توقيع المشتريات</th>
@@ -503,60 +497,56 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
             </tbody>
           </table>
 
-
-        {
-
-
-
+          {
             (!isGeneratingPDF  && readOnlyState && <Form.Item style={{ marginTop: 24 }}>
               {    <Button style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }}  type="primary" onClick={() => generatePDF(pdfRef)}>تحميل PDF</Button>}
-
-
-              
+   
             </Form.Item>)
-        }  
-     
+          }  
 
-        {   !isGeneratingPDF && !readOnlyState && (
-          <>
-            <Button
-              icon={<PlusOutlined />}
-              onClick={() => {
-                setDataSource([...dataSource, { key: count }]);
-                setCount(count + 1);
-              }}
-              block
-              style={{
-                marginTop: 16,
-                borderColor: '#76c4cc',
-                color: '#76c4cc',
-                backgroundColor: '#f0fbfc',
-                fontWeight: 'bold',
-                borderRadius: 6
-              }}
-            >
-              إضافة بند
-            </Button>
+            {!isGeneratingPDF && !readOnlyState && (
+              <>
+              <Button
+                icon={<PlusOutlined />}
+                onClick={() =>
+                  add({
+                    description: '',
+                    intensity: '',
+                    cost: 0,
+                    quantity: 0,
+                    salePrice: 0,
+                    location: '',
+                    totalCost: 0
+                  })
+                }
+                block
+                style={{
+                  marginTop: 16,
+                  borderColor: '#76c4cc',
+                  color: '#76c4cc',
+                  backgroundColor: '#f0fbfc',
+                  fontWeight: 'bold',
+                  borderRadius: 6
+                }}
+              >
+                إضافة بند
+              </Button>
 
-            <Form.Item style={{ marginTop: 24 }}>
-              {!isGeneratingPDF &&    <Button type="primary" onClick={editState ? handleUpdate : handleSubmission}>
-                {editState ? 'حفظ' : 'ارسال'}
-              </Button>}
+
+              <Form.Item style={{ marginTop: 24 }}>
+                  {!isGeneratingPDF &&    <Button type="primary" onClick={editState ? handleUpdate : handleSubmission}>
+                    {editState ? 'حفظ' : 'ارسال'}
+                    </Button>}
 
 
               
             </Form.Item>
-            
-
-           
-
-            
-
-   
-
-            
+            </>
+            )}
           </>
         )}
+      </Form.List>
+
       </Form>
     </div>
     </div>  
