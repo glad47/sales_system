@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>عرض سعر - كيو</title>
+    <!-- إضافة روابط الخط -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            zoom: 1;
+        }
+        body { 
+            font-family: Tahoma, Arial, sans-serif; 
+            background: #f8f8f8; 
+        }
+        .ar-ruqaa {
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 2.2em;
+            letter-spacing: 5px;
+        }
+        .aref-ruqaa-regular {
+  font-family: "Aref Ruqaa", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.aref-ruqaa-bold {
+  font-family: "Aref Ruqaa", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+        .container { 
+            width: 1100px; 
+            margin: 30px auto; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 0 10px #ccc; 
+            position: relative; 
+        }
+        /* زخارف الدوائر */
+        .decor {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 80px; pointer-events: none; z-index: 2;
+        }
+        .decor span {
+            position: absolute; border-radius: 50%;
+            opacity: 0.7;
+        }
+        .decor .d1 { width: 40px; height: 18px; background: #ff914d; top: 18px; left: 120px; }
+        .decor .d2 { width: 30px; height: 30px; background: #6ec6ff; top: 10px; left: 200px; }
+        .decor .d3 { width: 20px; height: 20px; background: #2196f3; top: 40px; left: 250px; }
+        .decor .d4 { width: 35px; height: 15px; background: #6ec6ff; top: 15px; right: 180px; }
+        .decor .d5 { width: 25px; height: 25px; background: #2196f3; top: 45px; right: 120px; }
+        .decor .d6 { width: 30px; height: 10px; background: #ff914d; top: 60px; right: 220px; }
+        /* زخارف إضافية */
+        .decor .d7 { width:22px;height:22px;top:32px;left:60px;background:#6ec6ff;}
+        .decor .d8 { width:18px;height:10px;top:12px;left:320px;background:#ff914d;}
+        .decor .d9 { width:28px;height:12px;top:55px;right:80px;background:#6ec6ff;}
+        .decor .d10 { width:15px;height:15px;top:25px;right:60px;background:#2196f3;}
+        .decor .d11 { width:12px;height:12px;top:10px;left:180px;background:#2196f3;}
+        .decor .d12 { width:10px;height:10px;top:50px;left:250px;background:#ff914d;}
+        .decor .d13 { width:14px;height:7px;top:60px;left:140px;background:#6ec6ff;}
+        .decor .d14 { width:8px;height:8px;top:20px;right:200px;background:#ff914d;}
+        .decor .d15 { width:16px;height:16px;top:35px;right:150px;background:#2196f3;}
+        .decor span { opacity: 0.7; }
+        /* شريط العنوان */
+        .header-bar {
+            position: relative;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+            padding-top: 10px;
+            padding-bottom: 0;
+            padding-right: 0;
+            padding-left: 0;
+        }
+        #q-logo {
+    position: static;
+    font-size: 2.2em;
+    color: #2196f3;
+    font-family: 'Aref Ruqaa', serif;
+    font-weight: bold;
+    letter-spacing: 5px;
+    z-index: 10;
+    margin-left: 10px;
+}
+.header-bar h2 {
+    color: #2196f3;
+    font-size: 2.2em;
+    letter-spacing: 5px;
+    margin: 0;
+    text-align: right;
+    padding-right: 30px;
+    line-height: 1.1;
+    flex: 0 0 auto;
+}
+.quote-title {
+    flex: 1 1 auto;
+    text-align: center;
+    color: #2196f3;
+    font-size: 2em;
+    letter-spacing: 2px;
+}
+        /* أشرطة الجدول */
+        .main-table th, .main-table td { border: 1px solid #aaa; text-align: center; padding: 6px; }
+        .main-table th { background: #e0f4ff; color: #2196f3; font-weight: bold; }
+        .main-table th.orange { background: #ff914d; color: #fff; }
+        .main-table th.blue { background: #6ec6ff; color: #222; }
+        .main-table td.orange { background: #ff914d; color: #fff; }
+        .main-table td.blue { background: #6ec6ff; color: #222; }
+        .totals { background: #e0f4ff; font-weight: bold; }
+        .totals.orange { background: #ff914d; color: #fff; }
+        .totals.blue { background: #6ec6ff; color: #222; }
+        input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; border: none; background: transparent; text-align: center; }
+        input:focus { outline: 1px solid #2196f3; background: #e3f2fd; }
+        .signatures td { border: none; }
+        .print-btn { padding: 10px 30px; background: #2196f3; color: #fff; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; }
+        .print-btn:hover { background: #1769aa; }
+        .note { margin-top: 10px; }
+        /* تحديد حجم الورقة وهوامشها للطباعة */
+@page {
+    size: 29.7cm 21cm;
+    margin: 0;
+}
+
+@media print {
+    html, body {
+        height: 100%;
+        overflow: hidden !important;
+    }
+    .container {
+        page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+    }
+    table, tr, td, th {
+        page-break-inside: avoid !important;
+    }
+    body { background: #fff; }
+    .print-btn { display: none !important; }
+    .container {
+        width: 27.7cm !important;
+        min-height: 19cm !important;
+        box-shadow: none;
+        border: 3px solid #2196f3;
+        border-radius: 12px;
+        margin: 1cm auto !important;
+        padding: 10px !important;
+        background: #fff;
+        box-sizing: border-box;
+        overflow: visible !important;
+    }
+    table.main-table {
+        width: 100% !important;
+        table-layout: fixed;
+        word-break: break-word;
+    }
+    th, td {
+        font-size: 1em !important;
+        padding: 4px !important;
+    }
+    body, .container, .main-table th, .main-table td, .decor span {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+#q-logo {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    font-size: 2.2em;
+    color: #2196f3;
+    font-family: 'Aref Ruqaa', serif;
+    font-weight: bold;
+    letter-spacing: 5px;
+    z-index: 10;
+}
+    </style>
+</head>
+<body>
+<div class="container" id="printArea">
+    <div class="decor">
+        <span class="d1"></span>
+        <span class="d2"></span>
+        <span class="d3"></span>
+        <span class="d4"></span>
+        <span class="d5"></span>
+        <span class="d6"></span>
+        <span class="d7"></span>
+        <span class="d8"></span>
+        <span class="d9"></span>
+        <span class="d10"></span>
+        <span class="d11"></span>
+        <span class="d12"></span>
+        <span class="d13"></span>
+        <span class="d14"></span>
+        <span class="d15"></span>
+    </div>
+    <div class="header-bar">
+        <h2><span class="aref-ruqaa-bold">كيو</span></h2>
+        <span class="quote-title aref-ruqaa-bold">عرض السعر</span>
+        <span id="q-logo">Q</span>
+    </div>
+    <div style="margin-bottom:10px;text-align:right;">
+        <label style="font-weight:bold;">اسم الشركة:</label>
+        <input type="text" id="companyName" style="width:300px; font-size:1em; padding:4px;">
+    </div>
+    <table class="main-table" style="margin-bottom:0;">
+        <tr>
+            <th class="orange" style="width:60px;"></th>
+            <th class="blue" colspan="4" style="font-size:1.1em;">خصم المورد</th>
+            <th class="blue" colspan="2" style="font-size:1.1em;">التاريخ</th>
+        </tr>
+        <tr>
+            <td class="orange"></td>
+            <td class="blue" colspan="4"><input type="text" id="discount" value="0"></td>
+            <td class="blue" colspan="2" id="today"></td>
+        </tr>
+    </table>
+    <table class="main-table">
+        <tr>
+            <th class="blue" style="width:40px;">#</th>
+            <th class="blue">البيان</th>
+            <th class="blue">الشدة</th>
+            <th class="blue">التكلفة</th>
+            <th class="blue">الكمية</th>
+            <th class="blue">الإجمالي التكلفة</th>
+            <th class="blue">سعر البيع</th>
+            <th class="blue">مكان العرض</th>
+        </tr>
+        <tbody id="items"></tbody>
+    </table>
+    <table class="main-table" style="margin-top:0;">
+        <tr>
+            <td class="totals blue">الإجمالي بدون ضريبة</td>
+            <td class="totals orange"><input type="text" id="subtotal" readonly value="0.00"></td>
+        </tr>
+        <tr>
+            <td class="totals blue">الضريبة</td>
+            <td class="totals orange"><input type="text" id="tax" readonly value="0.00"></td>
+        </tr>
+        <tr>
+            <td class="totals blue">الإجمالي</td>
+            <td class="totals orange"><input type="text" id="total" readonly value="0.00"></td>
+        </tr>
+    </table>
+    <div class="note">
+        <label>ملاحظة:</label>
+        <input type="text" style="width:90%;">
+    </div>
+    <table class="signatures" style="margin-top:10px;">
+        <tr>
+            <td>توقيع/المندوب<br><input type="text"></td>
+            <td>توقيع/المشتريات<br><input type="text"></td>
+            <td>توقيع/ادخال الأصناف<br><input type="text"></td>
+            <td>توقيع/التسعير<br><input type="text"></td>
+            <td>توقيع/طلب الشراء + الدعم<br><input type="text"></td>
+            <td>توقيع/التدقيق النهائي<br><input type="text"></td>
+        </tr>
+    </table>
+</div>
+<div style="text-align:center;">
+    <button class="print-btn" onclick="window.print()">طباعة</button>
+</div>
+<script>
+    // Fill today's date
+    document.getElementById('today').textContent = new Date().toISOString().slice(0,10);
+
+    // Generate 11 rows instead of 12
+    const items = document.getElementById('items');
+    for(let i=1; i<=11; i++) {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${i}</td>
+            <td><input type="text" class="desc"></td>
+            <td><input type="text" class="strength"></td>
+            <td><input type="number" class="cost" min="0" step="0.01" value="0"></td>
+            <td><input type="number" class="qty" min="0" step="1" value="0"></td>
+            <td><input type="text" class="totalcost" readonly value="0.00"></td>
+            <td><input type="number" class="sell" min="0" step="0.01" value="0"></td>
+            <td><input type="text" class="place"></td>
+        `;
+        items.appendChild(row);
+    }
+
+    // Calculation logic
+    function recalc() {
+        // إزالة الفواصل قبل التحويل إلى رقم
+        let discount = parseInt(document.getElementById('discount').value.replace(/[^\d]/g, '')) || 0;
+        let subtotal = 0;
+        document.querySelectorAll('#items tr').forEach(row => {
+            let cost = parseFloat(row.querySelector('.cost').value) || 0;
+            let qty = parseFloat(row.querySelector('.qty').value) || 0;
+            let total = cost * qty;
+            // تنسيق الرقم مع فاصلة بعد خانة الألوف
+            row.querySelector('.totalcost').value = total.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            subtotal += total;
+        });
+        
+        document.getElementById('subtotal').value = subtotal.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        let tax = subtotal * 0.15;
+        document.getElementById('tax').value = tax.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        let total = subtotal + tax;
+        document.getElementById('total').value = total.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // Event delegation for dynamic rows
+    items.addEventListener('input', function(e) {
+        if(e.target.classList.contains('cost') || e.target.classList.contains('qty')) {
+            recalc();
+        }
+    });
+
+    // تحديث الحساب عند تغيير الخصم
+    document.getElementById('discount').addEventListener('input', function(e) {
+    // إزالة كل الأحرف غير الأرقام
+    let cleanValue = this.value.replace(/[^\d]/g, '');
+    // تحويل القيمة إلى رقم
+    let value = parseInt(cleanValue) || 0;
+    // تنسيق الرقم مع فاصلة بعد خانة الألوف
+    this.value = value.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+        useGrouping: true
+    });
+    recalc();
+});
+
+    // Initial calculation
+    recalc();
+</script>
+</body>
+</html>

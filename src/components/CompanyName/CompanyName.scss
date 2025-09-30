@@ -1,0 +1,32 @@
+.company-name-input {
+  direction: rtl;
+  margin-top: 30px;
+  width: 39%;
+  background-color: #eaf8fa; // Light background based on #76c4cc
+  padding: 16px;
+  border-radius: 8px;
+
+  label {
+    font-weight: bold;
+    color: #76c4cc;
+    font-size: 1.1em;
+  }
+
+  input {
+    text-align: start;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+
+    &:focus {
+      outline: 1px solid #76c4cc;
+      background: #d6f0f3; // Slightly deeper focus color
+    }
+  }
+
+  .ant-input-disabled{
+    background: transparent!important;
+    color: #222!important;
+  }
+}

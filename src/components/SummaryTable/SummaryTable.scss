@@ -1,0 +1,37 @@
+.summary-table-wrapper {
+  direction: rtl;
+  background: #fff;
+  margin-top: 12px;
+  margin-bottom: 12px !important;
+  width: 100%;
+  display: block;
+  // justify-content: flex-end; // 👈 aligns child to the left in RTL
+
+  .summary-table {
+    // width: 29%;
+    overflow: hidden;
+    float: left;
+
+    td {
+      border: 2px double #ccc;
+      width: 29%;
+      padding: 19px 0px;
+      text-align: center;
+      font-size: 0.95em;
+      background: #fff;
+    }
+
+    .label-cell {
+      background-color: #76c4cc;
+      color: #fff;
+      font-weight: bold;
+      width: 71%;
+
+    }
+
+    .value-cell {
+      background-color: #eaf8fa;
+      color: #222;
+    }
+  }
+}

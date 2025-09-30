@@ -1,0 +1,27 @@
+.custom-sider {
+  background-color: darken(#76c4cc, 20%) !important; // darkens by 10%
+  direction: rtl;
+}
+
+
+.custom-menu {
+  background-color: transparent !important;
+  direction: rtl;
+
+  .ant-menu-item {
+    text-align: right; // align text to the right
+    color: #fff;
+
+    a {
+      color: #fff;
+    }
+
+    &:hover {
+      background-color: #5bb3bb !important;
+    }
+  }
+
+  .ant-menu-item-selected {
+    background-color: #4aa1a9 !important;
+  }
+}

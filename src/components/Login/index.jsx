@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
-function LoginPage() {
+function Login() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const onFinish = async (values) => {
@@ -94,7 +94,7 @@ function LoginPage() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} block>
               دخول
             </Button>
           </Form.Item>
@@ -104,4 +104,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default Login;

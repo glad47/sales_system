@@ -1,0 +1,226 @@
+.main-table {
+//   border-collapse: separate;
+//   border-spacing: 4px;
+//   background: #fff;
+//   box-shadow: 0 0 0 3px #76c4cc; // outer border
+//   border-radius: 8px;
+
+
+  th, td {
+    border: 2px double #aaa;
+    text-align: center;
+    padding: 4px;
+    background: #fff;
+    font-size: 0.95em;
+    
+  }
+
+  thead > tr > th {
+    background-color: #76c4cc !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1em !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  tbody > tr:nth-child(even) td {
+    background-color: #eaf8fa;
+  }
+
+  tbody > tr:hover td {
+    background-color: #d6f0f3;
+  }
+
+
+  .ant-table-cell {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    font-size: 13px; // optional: reduce font size for tighter rows
+  }
+
+  .main-table .ant-table-row {
+    height: 24px !important; // optional: force row height
+  }
+
+
+  
+
+
+}
+
+
+
+.main-table,
+.main-table_discount,
+.vendor-discount-table {
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+    text-align: center;
+
+    &:focus {
+      outline: 1px solid #76c4cc;
+      background: #eaf8fa;
+    }
+  }
+}
+
+
+.main-table,
+.main-table_discount,
+.vendor-discount-table {
+  // Target the outer wrapper of InputNumber
+  .ant-input-number {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+
+    &:focus-within {
+      outline: 1px solid #76c4cc;
+      background: #eaf8fa;
+    }
+
+    // Optional: smooth transitions
+    transition: background 0.3s ease, outline 0.3s ease;
+  }
+
+  // Target the actual input inside InputNumber
+  .ant-input-number-input {
+    text-align: center;
+    background: transparent;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .ant-input-number-disabled {
+    width: 100%!important;
+    border: none!important;
+    background: transparent!important;
+    text-align: center!important;
+    color: #222!important;
+}
+
+
+.ant-input-disabled{
+   width: 100%!important;
+    border: none!important;
+    background: transparent!important;
+    color: #222!important;
+}
+
+
+}
+
+
+
+.signatures-table {
+  width: 39%;
+  margin-top: 10px;
+  // border-collapse: separate;
+  // border-spacing: 4px;
+  // background: #fff;
+  // box-shadow: 0 0 0 3px #76c4cc;
+  // border-radius: 8px;
+
+  th,
+  td {
+    border: 2px double #aaa;
+    text-align: center;
+    padding: 8px;
+    background: #fff;
+    font-size: 0.95em;
+  }
+
+  thead > tr > th {
+    background-color: #76c4cc !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1em !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  tbody > tr:nth-child(even) td {
+    background-color: #eaf8fa;
+  }
+
+  tbody > tr:hover td {
+    background-color: #d6f0f3;
+  }
+
+
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+    text-align: center;
+
+    &:focus {
+      outline: 1px solid #76c4cc;
+      background: #eaf8fa;
+    }
+  }
+  
+.ant-input-disabled{
+   width: 100%!important;
+    border: none!important;
+    background: transparent!important;
+    color: #222!important;
+}
+
+
+  
+}
+
+
+.note-section {
+    
+  direction: rtl;
+  // margin-top: 30px;
+  width: 39%;
+  background-color: #eaf8fa; // Light background based on #76c4cc
+  padding: 16px;
+  border-radius: 8px;
+
+  label {
+    font-weight: bold;
+    color: #222;
+    font-size: 1.1em;
+  }
+
+  input {
+    text-align: start;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+
+    &:focus {
+      outline: 1px solid #76c4cc;
+      background: #d6f0f3; // Slightly deeper focus color
+    }
+  }
+
+  .ant-input-disabled{
+    background: transparent!important;
+    color: #222!important;
+  }
+}
+
+
+
+
+
+
+

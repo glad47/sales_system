@@ -1,0 +1,80 @@
+.header-container {
+  position: relative;
+  direction: rtl !important;
+}
+
+.decor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  pointer-events: none;
+  z-index: 2;
+ direction: rtl;
+
+  span {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+  }
+
+  .d1 { width: 40px; height: 18px; background: #ff914d; top: 18px; left: 120px; }
+  .d2 { width: 30px; height: 30px; background: #6ec6ff; top: 10px; left: 200px; }
+  .d3 { width: 20px; height: 20px; background: #2196f3; top: 40px; left: 250px; }
+  .d4 { width: 35px; height: 15px; background: #6ec6ff; top: 15px; right: 180px; }
+  .d5 { width: 25px; height: 25px; background: #2196f3; top: 45px; right: 120px; }
+  .d6 { width: 30px; height: 10px; background: #ff914d; top: 60px; right: 220px; }
+  .d7 { width: 22px; height: 22px; top: 32px; left: 60px; background: #6ec6ff; }
+  .d8 { width: 18px; height: 10px; top: 12px; left: 320px; background: #ff914d; }
+  .d9 { width: 28px; height: 12px; top: 55px; right: 80px; background: #6ec6ff; }
+  .d10 { width: 15px; height: 15px; top: 25px; right: 60px; background: #2196f3; }
+  .d11 { width: 12px; height: 12px; top: 10px; left: 180px; background: #2196f3; }
+  .d12 { width: 10px; height: 10px; top: 50px; left: 250px; background: #ff914d; }
+  .d13 { width: 14px; height: 7px; top: 60px; left: 140px; background: #6ec6ff; }
+  .d14 { width: 8px; height: 8px; top: 20px; right: 200px; background: #ff914d; }
+  .d15 { width: 16px; height: 16px; top: 35px; right: 150px; background: #2196f3; }
+}
+
+.header-bar {
+  position: relative;
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  padding-top: 10px;
+  direction: rtl !important;
+  font-family: 'Cairo', sans-serif;
+  word-wrap: normal;
+
+  h2 {
+    color: #76c4cc;
+    font-size: 3em;
+    margin: 0;
+    text-align: right;
+    padding-right: 30px;
+    line-height: 1.1;
+    flex: 0 0 auto;
+    
+  }
+
+  .quote-title {
+    flex: 1 1 auto;
+    text-align: center;
+    color: #76c4cc;
+    font-size: 2em;
+ 
+    font-weight: bold;
+  }
+
+  #q-logo {
+    position: static;
+    font-size: 2.2em;
+    color: #76c4cc;
+    font-family: 'Aref Ruqaa', serif;
+    font-weight: bold;
+    z-index: 10;
+    margin-left: 10px;
+  }
+}
