@@ -117,7 +117,7 @@ export default function Bills() {
         >
           تعديل
         </Button>
-        <Button type="link" onClick={() => navigate(`/bills/${record.key}`)}>عرض</Button>
+        <Button type="link" onClick={() => navigate(`/bills/${record.key}`, { state: { record } })}>عرض</Button>
         <Popconfirm
           title="هل أنت متأكد من الحذف؟"
           onConfirm={() => handleDelete(record.key)}

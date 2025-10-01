@@ -5,12 +5,14 @@ import api from '../../api/axios'
 import QuotationForm from '../QuotationForm';
 
 export default function BillDetail() {
+    const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
+  const record = location.state?.record;
   const [billData, setBillData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [readOnly, setReadOnly] = useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
+
 
 
   const isEdit = new URLSearchParams(location.search).get('edit') === 'true';
@@ -24,8 +26,9 @@ export default function BillDetail() {
     }
 
     const fetchBill = async () => {
+      console.log(record)
       try {
-        const res = await api.get(`/service/get_quotation/${id}`, {
+        const res = await api.get(`/service/get_quotation/${record.user_id}/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
