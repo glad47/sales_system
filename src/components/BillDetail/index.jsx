@@ -26,7 +26,6 @@ export default function BillDetail() {
     }
 
     const fetchBill = async () => {
-      console.log(record)
       try {
         const res = await api.get(`/service/get_quotation/${record.user_id}/${id}`, {
           headers: {
