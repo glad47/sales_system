@@ -84,13 +84,13 @@ export default function Bills() {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
-        message.success('تم حذف عرض السعر بنجاح');
+        message.success('تم حذف طلب الشراء بنجاح');
         fetchBills();
       } else {
-        message.error(res.data.message || 'فشل في حذف عرض السعر');
+        message.error(res.data.message || 'فشل في حذف طلب الشراء');
       }
     } catch {
-      message.error('حدث خطأ أثناء حذف عرض السعر');
+      message.error('حدث خطأ أثناء حذف طلب الشراء');
     }
   };
 
@@ -112,7 +112,7 @@ export default function Bills() {
     render: (_, record) => (
       <>
         <Button
-          onClick={() => navigate(`/bills/${record.key}?edit=true`)}
+          onClick={() => navigate(`/bills/${record.key}?edit=true`, { state: { record } })}
           disabled={userType !== 'root'}
         >
           تعديل

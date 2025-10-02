@@ -75,17 +75,17 @@ const MainPage = () => {
     {
       key: 'quotation',
       icon: <FileAddOutlined />,
-      label: <Link to="/quotation">إنشاء عرض سعر</Link>,
+      label: <Link to="/quotation">إنشاء طلب شراء</Link>,
     },
     {
       key: 'quotation-offer',
       icon: <SolutionOutlined />,
-      label: <Link to="/offer-quotation">إنشاء عرض</Link>,
+      label: <Link to="/offer-quotation">إنشاء عروض</Link>,
     },
     {
       key: 'received-quotation',
       icon: <FileSearchOutlined />,
-      label: <Link to="/received-quotation">عروض الأسعار المستلمة</Link>,
+      label: <Link to="/received-quotation">طلبات الشراء المستلمة</Link>,
     },
     {
       key: 'received-offer',
@@ -133,7 +133,7 @@ useEffect(() => {
     // Only connect if userType is valid
     if (!['1', '2', '3', 'root'].includes(userType?.toString())) return;
 
-    const socket = new WebSocket(process.env.REACT_APP_WS_DOMAIN);
+    const socket = new WebSocket(process.env.REACT_APP_WS_DOMAIN_WS);
 
     socket.onopen = () => {
       console.log('WebSocket connected');
@@ -153,7 +153,7 @@ useEffect(() => {
           if (!seen.includes(res.bill_id)) {
             api.info({
               message: 'إشعار جديد',
-              description: `${res.companyName} شركة ${res.username} عرض سعر جديد من`,
+              description: `${res.companyName} شركة ${res.username} طلب شراء جديد من`,
               placement: 'topRight',
               duration: 10
             });

@@ -21,10 +21,11 @@ export default function ReceiveOffersPage() {
   const navigate = useNavigate();
 
   const statusOptions = [
-    { label: 'Processing', value: 0 },
-    { label: 'Accepted', value: 1 },
-    { label: 'Canceled', value: 2 }
+    { label: 'قيد المعالجة', value: 0 },
+    { label: 'تم القبول', value: 1 },
+    { label: 'تم الإلغاء', value: 2 }
   ];
+
 
   const fetchOffers = async (params = {}) => {
     const token = localStorage.getItem('adminToken');
@@ -80,11 +81,11 @@ export default function ReceiveOffersPage() {
     fetchOffers({ page: pag.current, pageSize: pag.pageSize, filters });
   };
 
-  const handleStatusChange = async (offerId, newStatus) => {
+  const handleStatusChange = async (offerId,record, newStatus) => {
   const token = localStorage.getItem('adminToken');
   if (!token) return navigate('/');
   try {
-    const res = await api.put(`/service/update-offer-status/${offerId}`, {
+    const res = await api.put(`/service/update-offer-status/${record.user_id}/${offerId}`, {
       status: newStatus
     }, {
       headers: { Authorization: `Bearer ${token}` }
@@ -118,20 +119,21 @@ export default function ReceiveOffersPage() {
     title: 'الإجراءات',
     render: (_, record) => (
       <Space wrap size="small">
-        <Button type="link" onClick={() => navigate(`/offers/${record.key}`)}>
+        <Button type="link" onClick={() => navigate(`/offers/${record.key}`, { state: { record } })}>
           عرض
         </Button>
         <Popconfirm
+          
           title="هل أنت متأكد من قبول العرض؟"
-          onConfirm={() => handleStatusChange(record.key, 1)}
+          onConfirm={() => handleStatusChange(record.key,record, 1)}
         >
-          <Button style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary">قبول</Button>
+          <Button disabled={record.status > 0} style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary">قبول</Button>
         </Popconfirm>
         <Popconfirm
           title="هل أنت متأكد من رفض العرض؟"
-          onConfirm={() => handleStatusChange(record.key, 2)}
+          onConfirm={() => handleStatusChange(record.key,record, 2)}
         >
-          <Button danger type="dashed">رفض</Button>
+          <Button disabled={record.status > 0} danger type="dashed">رفض</Button>
         </Popconfirm>
       </Space>
     ),

@@ -74,7 +74,7 @@ export default function Users() {
     dataIndex: 'type',
     render: type => {
       const roleMap = {
-        0: 'مدير المبيعات',
+        0: 'مدير المشتريات',
         1: 'مدير الطلبات',
         2: 'مدير العروض',
         3: 'مدير العروض والطلبات',

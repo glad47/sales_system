@@ -5,12 +5,14 @@ import api from '../../api/axios'
 import QuotationOfferForm from '../QuotationOfferForm';
 
 export default function OfferDetail() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
+  const record = location.state?.record;
   const [offerData, setOfferData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [readOnly, setReadOnly] = useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
+ 
 
 
   const isEdit = new URLSearchParams(location.search).get('edit') === 'true';
@@ -25,7 +27,7 @@ export default function OfferDetail() {
 
     const fetchBill = async () => {
       try {
-        const res = await api.get(`/service/get_offer/${id}`, {
+        const res = await api.get(`/service/get_offer/${record.user_id}/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

@@ -21,10 +21,11 @@ export default function ReceiveSalesPage() {
   const navigate = useNavigate();
 
   const statusOptions = [
-    { label: 'Processing', value: 0 },
-    { label: 'Accepted', value: 1 },
-    { label: 'Canceled', value: 2 }
+    { label: 'قيد المعالجة', value: 0 },
+    { label: 'تم القبول', value: 1 },
+    { label: 'تم الإلغاء', value: 2 }
   ];
+
 
   const fetchBills = async (params = {}) => {
     const token = localStorage.getItem('adminToken');
@@ -82,18 +83,18 @@ export default function ReceiveSalesPage() {
     fetchBills({ page: pag.current, pageSize: pag.pageSize, filters });
   };
 
-  const handleStatusChange = async (billId, newStatus) => {
+  const handleStatusChange = async (billId,record, newStatus) => {
   const token = localStorage.getItem('adminToken');
   if (!token) return navigate('/');
   try {
-    const res = await api.put(`/service/update-quotation-status/${billId}`, {
+    const res = await api.put(`/service/update-quotation-status/${record.user_id}/${billId}`, {
       status: newStatus
     }, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.data.success) {
-      message.success('تم تحديث حالة عرض السعر');
-      fetchBills(); // refresh list
+      message.success('تم تحديث حالة طلب الشراء');
+      fetchBills({ page: 1, pageSize: pagination.pageSize, filters: { status: 0 }}); // refresh list
     } else {
       message.error(res.data.message || 'فشل في تحديث الحالة');
     }
@@ -111,13 +112,13 @@ export default function ReceiveSalesPage() {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
-        message.success('تم حذف عرض السعر بنجاح');
+        message.success('تم حذف طلب الشراء بنجاح');
         fetchBills({ page: 1, pageSize: pagination.pageSize, filters: { status: 0 }});
       } else {
-        message.error(res.data.message || 'فشل في حذف عرض السعر');
+        message.error(res.data.message || 'فشل في حذف طلب الشراء');
       }
     } catch {
-      message.error('حدث خطأ أثناء حذف عرض السعر');
+      message.error('حدث خطأ أثناء حذف طلب الشراء');
     }
   };
 
@@ -138,20 +139,20 @@ export default function ReceiveSalesPage() {
     title: 'الإجراءات',
     render: (_, record) => (
       <Space wrap size="small">
-        <Button type="link" onClick={() => navigate(`/bills/${record.key}`)}>
+        <Button type="link" onClick={() => navigate(`/bills/${record.key}`, { state: { record } })}>
           عرض
         </Button>
         <Popconfirm
-          title="هل أنت متأكد من قبول عرض السعر؟"
-          onConfirm={() => handleStatusChange(record.key, 1)}
+          title="هل أنت متأكد من قبول طلب الشراء"
+          onConfirm={() => handleStatusChange(record.key, record, 1)}
         >
-          <Button style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary">قبول</Button>
+          <Button disabled={record.status > 0} style={{ backgroundColor: '#76c4cc', borderColor: '#76c4cc' }} type="primary">قبول</Button>
         </Popconfirm>
         <Popconfirm
-          title="هل أنت متأكد من رفض عرض السعر؟"
-          onConfirm={() => handleStatusChange(record.key, 2)}
+          title="هل أنت متأكد من رفض طلب الشراء"
+          onConfirm={() => handleStatusChange(record.key,record, 2)}
         >
-          <Button danger type="dashed">رفض</Button>
+          <Button disabled={record.status > 0} danger type="dashed">رفض</Button>
         </Popconfirm>
       </Space>
     ),
@@ -195,7 +196,7 @@ export default function ReceiveSalesPage() {
               fetchBills({ page: 1, pageSize: pagination.pageSize, filters: { status: 0 } });
             }}
           >
-            مسح
+            اعادة تعين
           </Button>
         </Form.Item>
       </Form>

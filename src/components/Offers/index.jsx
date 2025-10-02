@@ -109,11 +109,11 @@ export default function Offers() {
           <>
             <Button
               disabled={userType !== 'root'}
-              onClick={() => navigate(`/offers/${record.key}?edit=true`)}
+              onClick={() => navigate(`/offers/${record.key}?edit=true`, { state: { record } })}
             >
               تعديل
             </Button>
-            <Button type="link" onClick={() => navigate(`/offers/${record.key}`)}>
+            <Button type="link" onClick={() => navigate(`/offers/${record.key}`, { state: { record } })}>
               عرض
             </Button>
             <Popconfirm

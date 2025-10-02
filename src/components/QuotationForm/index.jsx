@@ -41,6 +41,8 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
   const [username, setUsername] = useState('');
   const [vendorname, setVendorname] = useState('')
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const pdfRef = useRef();
 
@@ -57,7 +59,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
           intensity: '',
           cost: 0,
           quantity: 0,
-          salePrice: 0,
+          salePrice: '',
           location: '',
           totalCost: 0
         });
@@ -88,7 +90,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
           intensity: '',
           cost: 0,
           quantity: 0,
-          salePrice: 0,
+          salePrice: '',
           location: '',
           totalCost: 0
         });
@@ -163,7 +165,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
       intensity: item.intensity || '',
       cost: parseFloat(item.cost) || 0,
       quantity: parseFloat(item.quantity) || 0,
-      salePrice: parseFloat(item.salePrice) || 0,
+      salePrice: item.salePrice || '',
       location: item.location || '',
       totalCost: item.cost && item.quantity
         ? parseFloat((item.cost * item.quantity).toFixed(2))
@@ -172,8 +174,10 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
   };
 
   const handleUpdate = async () => {
+    setIsSubmitting(true);
     if(!userType){
       message.error('حدث خطأ أثناء حفظ التعديلات');
+      setIsSubmitting(false);
       return;
     }
     const token = localStorage.getItem('adminToken');
@@ -187,16 +191,19 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     // Validation checks
     if (!companyName || companyName.trim() === '') {
       message.error('يرجى إدخال اسم الشركة');
+      setIsSubmitting(false);
       return;
     }
 
     if (!hasValidItem) {
       message.error('يجب إدخال بند واحد على الأقل في الفاتورة');
+      setIsSubmitting(false);
       return;
     }
 
     if (!vendorname || vendorname.trim() === '') {
       message.error('يرجى إدخال توقيع المندوب');
+       setIsSubmitting(false);
       return;
     }
 
@@ -213,7 +220,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     };
 
     try {
-      const res = await api.put(`/service/update-quotation/${billId ? billId : initialData.bill_id}`, updateData, {
+      const res = await api.put(`/service/update-quotation/${initialData.user_id}/${billId ? billId : initialData.bill_id}`, updateData, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
@@ -229,12 +236,16 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
       }
     } catch {
       message.error('حدث خطأ أثناء حفظ التعديلات');
+    }finally{
+       setIsSubmitting(false);
     }
   };
 
   const handleSubmission = async () => {
+     setIsSubmitting(true);
      if(!userType){
       message.error('حدث خطأ أثناء حفظ التعديلات');
+      setIsSubmitting(false);
       return;
     }
 
@@ -248,16 +259,19 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
     // Validation checks
     if (!companyName || companyName.trim() === '') {
       message.error('يرجى إدخال اسم الشركة');
+      setIsSubmitting(false);
       return;
     }
 
     if (!hasValidItem) {
       message.error('يجب إدخال بند واحد على الأقل في الفاتورة');
+      setIsSubmitting(false);
       return;
     }
 
     if (!vendorname || vendorname.trim() === '') {
       message.error('يرجى إدخال توقيع المندوب');
+      setIsSubmitting(false);
       return;
     }
 
@@ -281,21 +295,51 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
         }
       });
       if (res.status == 200) {
-        message.success('تم إرسال عرض السعر بنجاح');
+        message.success('تم إرسال طلب الشراء بنجاح');
         const fullKey = res.data.key; // e.g. "quotation:1120:1759046111810"
         const parts = fullKey.split(':');
         const billId = parts[2];
         setBillId(billId)
         if (userType !== 'root'){
-          setReadOnlyState(true);
+          // setReadOnlyState(true);
+        setCompanyName('');
+        setVendorname('')
+        setNote('')
+    
+        
+
+
+        setDiscount(0);
+        setSubtotal(0);
+        setTax(0);
+        setTotal(0);
+          const paddedItems = [];
+          while (paddedItems.length < 10) {
+            paddedItems.push({
+              description: '',
+              intensity: '',
+              cost: 0,
+              quantity: 0,
+              salePrice: '',
+              location: '',
+              totalCost: 0
+            });
+          }
+          form.setFieldsValue({ items: paddedItems });
+          setDataSource(paddedItems.map((item, i) => ({key: uuid(), ...item })));
+          setCount(10);
         }else{
           setEditState(true)
+          // clean everything 
+
         } 
       } else {
-        message.error(res.data.message || 'فشل في إرسال عرض السعر');
+        message.error(res.data.message || 'فشل في إرسال طلب الشراء');
       }
     } catch (error) {
-      message.error('حدث خطأ أثناء إرسال عرض السعر');
+      message.error('حدث خطأ أثناء إرسال طلب الشراء');
+    }finally{
+      setIsSubmitting(false);
     }
   };
 
@@ -341,7 +385,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
 
     return (
     <div ref={pdfRef} >
-      <HeaderForm header={"عرض السعر"} />
+      <HeaderForm header={"طلب الشراء"} />
       <div className="container">
       <Form form={form} layout="vertical" style={{ direction: 'rtl' }}>
         <CompanyName
@@ -434,7 +478,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
                   title: 'سعر البيع',
                   render: (_, field) => (
                     <Form.Item {...field} name={[field.name, 'salePrice']} noStyle>
-                      <InputNumber min={0} step={0.01} style={{ width: '100%' }} disabled={readOnlyState} />
+                      <Input style={{ width: '100%' }} disabled={readOnlyState} />
                     </Form.Item>
                   )
                 },
@@ -514,7 +558,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
                     intensity: '',
                     cost: 0,
                     quantity: 0,
-                    salePrice: 0,
+                    salePrice: '',
                     location: '',
                     totalCost: 0
                   })
@@ -534,7 +578,7 @@ export default function QuotationForm({ initialData = null, readOnly = false, is
 
 
               <Form.Item style={{ marginTop: 24 }}>
-                  {!isGeneratingPDF &&    <Button type="primary" onClick={editState ? handleUpdate : handleSubmission}>
+                  {!isGeneratingPDF &&    <Button type="primary"  disabled={isSubmitting} onClick={editState ? handleUpdate : handleSubmission}>
                     {editState ? 'حفظ' : 'ارسال'}
                     </Button>}
 

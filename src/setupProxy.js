@@ -15,4 +15,15 @@ module.exports = function (app) {
       },
     })
   );
+
+
+  // WebSocket proxy
+  // app.use(
+  //   '/ws',
+  //   createProxyMiddleware({
+  //     target: process.env.REACT_APP_WS_DOMAIN,
+  //     changeOrigin: true,
+  //     ws: true, // Enable WebSocket proxying
+  //   })
+  // );
 };

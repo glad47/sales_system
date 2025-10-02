@@ -12,14 +12,14 @@ services:
     restart: always 
 
   server:
-    image: glad47/sales-server:07
+    image: glad47/sales-server:08
     container_name: server
     ports:
       - "8888:8888"
     restart: always 
 
   app:
-    image: glad47/sales-system:013
+    image: glad47/sales-system:30
     container_name: app
     ports:
       - "80:80"

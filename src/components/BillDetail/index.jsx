@@ -5,7 +5,7 @@ import api from '../../api/axios'
 import QuotationForm from '../QuotationForm';
 
 export default function BillDetail() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const record = location.state?.record;
@@ -48,10 +48,11 @@ export default function BillDetail() {
               totalCost: 0
             });
           }
-
+          console.log("might be an issue ")
+          console.log({ ...res.data.data, billItems: paddedItems })
           setBillData({ ...res.data.data, billItems: paddedItems });
         } else {
-          message.error(res.data.message || 'فشل في جلب تفاصيل عرض السعر');
+          message.error(res.data.message || 'فشل في جلب تفاصيل طلب الشراء');
         }
       } catch (err) {
         message.error('حدث خطأ أثناء جلب البيانات');
